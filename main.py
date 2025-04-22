@@ -6,6 +6,23 @@ def book_list_view(library):
         for title in library:
             print(title)
 
+def add_book(title, author, year):
+    if title in library:
+        print(f"Книга '{title}' уже есть в библиотеке.\nЖелаете обновить информацию о книге? (да\нет)")
+        user_input = input().lower()
+        if user_input == "да":
+            library[title]["автор"] = author
+            library[title]["год издания"] = year
+            print(f"Информация о книге '{title}' изменена.")
+        else:
+            print(f"Информация о книге '{title}' не изменена.")
+    else:
+        library[title] = {
+            "автор" : author,
+            "год издания" : year,
+            "наличие" : None
+        }
+        print(f"Книга '{title}' успешно добалена")
 
 library = {
     "Мастер и Маргарита" : {
@@ -24,7 +41,7 @@ library = {
         "наличие": True
     },
     "Анна Каренина": {
-        "автор": "Лев Толстой",
+        "автор": "Лев Николаевич Толстой",
         "год издания": 1873,
         "наличие": False
     },
@@ -35,4 +52,6 @@ library = {
     }
 }
 
+add_book("Отцы и дети", "Иван Тургенев", 1862)
+add_book("Анна Каренина", "Лев Толстой", 1873)
 book_list_view(library)
