@@ -27,7 +27,29 @@ def add_book(library, title, author, year):
 def remove_book(library, title):
     if title in library:
         del library[title]
-        print(f"Книга '{title}' удалена из библиотеки.")
+        print(f"Книга '{title}' удалена из библиотеки")
+    else:
+        print(f"Книга '{title}' не найдена в библиотеке")
+
+
+def issue_book(library, title):
+    if title in library:
+        if library[title]["наличие"]:
+            library[title]["наличие"] = False
+            print(f"Книга '{title} выдана'")
+        else:
+            print(f"Книга '{title}' уже взята")
+    else:
+        print(f"Книга '{title}' не найдена в библиотеке")
+
+
+def return_book(library, title):
+    if title in library:
+        if not library[title]["наличие"]:
+            library[title]["наличие"] = True
+            print(f"Книга '{title}' возвращена в библиотеку")
+        else:
+            print(f"Книга '{title}' уже находится в библиотеке")
     else:
         print(f"Книга '{title}' не найдена в библиотеке")
 
@@ -65,4 +87,6 @@ add_book(library, "Отцы и дети", "Иван Тургенев", 1862)
 add_book(library, "Анна Каренина", "Лев Толстой", 1873)
 remove_book(library, "Герой нашего времени")
 remove_book(library, "Несуществующая книга")
+issue_book(library, "Преступление и наказание")
+return_book(library, "Война и мир")
 book_list_view(library)
