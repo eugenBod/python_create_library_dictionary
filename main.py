@@ -23,6 +23,15 @@ def add_book(library, title, author, year):
         }
         print(f"Книга '{title}' успешно добалена")
 
+
+def remove_book(library, title):
+    if title in library:
+        del library[title]
+        print(f"Книга '{title}' удалена из библиотеки.")
+    else:
+        print(f"Книга '{title}' не найдена в библиотеке")
+
+
 library = {
     "Мастер и Маргарита" : {
         "автор" : "Михаил Булгаков",
@@ -51,6 +60,9 @@ library = {
     }
 }
 
+book_list_view(library)
 add_book(library, "Отцы и дети", "Иван Тургенев", 1862)
 add_book(library, "Анна Каренина", "Лев Толстой", 1873)
+remove_book(library, "Герой нашего времени")
+remove_book(library, "Не существующая книга")
 book_list_view(library)
