@@ -54,6 +54,17 @@ def return_book(library, title):
         print(f"Книга '{title}' не найдена в библиотеке")
 
 
+def find_book(library, title):
+    if title in library:
+        status = "в наличии" if library[title]["наличие"] else "выдана"
+        print(f"Информация о книге '{title}':\n"
+              f"Автор: {library[title]["автор"]}\n"
+              f"Год издания: {library[title]["год издания"]}\n"
+              f"Статус: {status}")
+    else:
+        print(f"Книга '{title}' не найдена в библиотеке")
+
+
 library = {
     "Мастер и Маргарита" : {
         "автор" : "Михаил Булгаков",
@@ -90,3 +101,5 @@ remove_book(library, "Несуществующая книга")
 issue_book(library, "Преступление и наказание")
 return_book(library, "Война и мир")
 book_list_view(library)
+find_book(library, "Анна Каренина")
+find_book(library, "Война и мир")
