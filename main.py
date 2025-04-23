@@ -56,7 +56,12 @@ def return_book(library, title):
 
 def find_book(library, title):
     if title in library:
-        status = "в наличии" if library[title]["наличие"] else "выдана"
+        if library[title]["наличие"] is None:
+            status = "Книга в библиотеке, но ее статус не определен"
+        elif library[title]["наличие"]:
+            status = "Книга доступна"
+        else:
+            status = "Книга выдана"
         print(f"Информация о книге '{title}':\n"
               f"Автор: {library[title]["автор"]}\n"
               f"Год издания: {library[title]["год издания"]}\n"
@@ -93,13 +98,31 @@ library = {
     }
 }
 
-book_list_view(library)
-add_book(library, "Отцы и дети", "Иван Тургенев", 1862)
-add_book(library, "Анна Каренина", "Лев Толстой", 1873)
-remove_book(library, "Герой нашего времени")
-remove_book(library, "Несуществующая книга")
-issue_book(library, "Преступление и наказание")
-return_book(library, "Война и мир")
-book_list_view(library)
-find_book(library, "Анна Каренина")
-find_book(library, "Война и мир")
+while True:
+    user_input = input("Меню:\n1. Показать список книг.\n2. Добавить книгу.\n3. Удалить книгу.\n"
+          "4. Выдать книгу.\n5. Вернуть книгу.\n6. Найти книгу.\n0. Выход.\n"
+          "Введите номер нужного действия: ")
+    if user_input == "1":
+        book_list_view(library)
+    elif user_input == "2":
+        title = input("Добавление новой книги.\nВведите название книги: ")
+        author = input("Введите автора книги:")
+        year = input("Введите год издания книги: ")
+        add_book(library, title, author, year)
+    elif user_input == "3":
+        title = input("Удаление книги.\nВведите название книги, которую нужно удалить: ")
+        remove_book(library, title)
+    elif user_input == "4":
+        title = input("Выдача книги.\nВведите название книги, которую нужно выдать: ")
+        issue_book(library, title)
+    elif user_input == "5":
+        title = input("Возврат книги.\nВведите название книги, которую нужно вернуть: ")
+        return_book(library, title)
+    elif user_input == "6":
+        title = input("Поиск книги.\nВведите название книги, которую хотите найти: ")
+        find_book(library, title)
+    elif user_input == "0":
+        print("Выход из программы.")
+        break
+    else:
+        print("Некорректный ввод.")
