@@ -7,25 +7,29 @@ def book_list_view(library):
             print(title)
 
 def add_book(library, title, author, year):
-    if title in library:
-        user_input = input(f"Книга '{title}' уже есть в библиотеке.\nЖелаете обновить информацию о книге? (да\нет)").lower()
-        if user_input == "да":
-            library[title]["автор"] = author
-            library[title]["год издания"] = year
-            print(f"Информация о книге '{title}' изменена.")
-        else:
-            print(f"Информация о книге '{title}' не изменена.")
+    if is_book_in_library(library, title):
+        refresh_book_information(library, title, author, year)
     else:
         library[title] = {
             "автор" : author,
             "год издания" : year,
-            "наличие" : None
+            "наличие" : True
         }
         print(f"Книга '{title}' успешно добалена")
 
 
+def refresh_book_information(library, title, author, year):
+    user_input = input(f"Книга '{title}' уже есть в библиотеке.\nЖелаете обновить информацию о книге? (да\нет)").lower()
+    if user_input == "да":
+        library[title]["автор"] = author
+        library[title]["год издания"] = year
+        print(f"Информация о книге '{title}' изменена.")
+    else:
+        print(f"Информация о книге '{title}' не изменена.")
+
+
 def remove_book(library, title):
-    if title in library:
+    if is_book_in_library(library, title):
         del library[title]
         print(f"Книга '{title}' удалена из библиотеки")
     else:
@@ -33,10 +37,10 @@ def remove_book(library, title):
 
 
 def issue_book(library, title):
-    if title in library:
+    if is_book_in_library(library, title):
         if library[title]["наличие"]:
             library[title]["наличие"] = False
-            print(f"Книга '{title} выдана'")
+            print(f"Книга '{title}' выдана")
         else:
             print(f"Книга '{title}' уже взята")
     else:
@@ -44,7 +48,7 @@ def issue_book(library, title):
 
 
 def return_book(library, title):
-    if title in library:
+    if is_book_in_library(library, title):
         if not library[title]["наличие"]:
             library[title]["наличие"] = True
             print(f"Книга '{title}' возвращена в библиотеку")
@@ -55,19 +59,37 @@ def return_book(library, title):
 
 
 def find_book(library, title):
-    if title in library:
-        if library[title]["наличие"] is None:
-            status = "Книга в библиотеке, но ее статус не определен"
-        elif library[title]["наличие"]:
+    if is_book_in_library(library, title):
+        if library[title]["наличие"]:
             status = "Книга доступна"
         else:
             status = "Книга выдана"
         print(f"Информация о книге '{title}':\n"
-              f"Автор: {library[title]["автор"]}\n"
-              f"Год издания: {library[title]["год издания"]}\n"
+              f"Автор: {library[title]['автор']}\n"
+              f"Год издания: {library[title]['год издания']}\n"
               f"Статус: {status}")
     else:
         print(f"Книга '{title}' не найдена в библиотеке")
+
+
+def is_book_in_library(library, title):
+    return title in library
+
+
+def validate_not_empty_field(field_value, field_name):
+    if not field_value:
+        print(f"Ошибка: {field_name} не может быть пустым")
+        return False
+    return True
+
+
+def validate_year(year_input):
+    try:
+        year = int(year_input)
+        return year
+    except ValueError:
+        print("Ошибка: год должен быть целым числом.\n")
+        return None
 
 
 library = {
@@ -105,9 +127,20 @@ while True:
     if user_input == "1":
         book_list_view(library)
     elif user_input == "2":
-        title = input("Добавление новой книги.\nВведите название книги: ")
-        author = input("Введите автора книги:")
-        year = input("Введите год издания книги: ")
+        print("Добавление новой книги:")
+        title = input("Введите название книги: ").strip()
+        if not validate_not_empty_field(title, "название книги"):
+            continue
+
+        author = input("Введите автора книги:").strip()
+        if not validate_not_empty_field(author, "автор книги"):
+            continue
+
+        year_input = input("Введите год издания книги: ")
+        year = validate_year(year_input)
+        if year is None:
+            continue
+
         add_book(library, title, author, year)
     elif user_input == "3":
         title = input("Удаление книги.\nВведите название книги, которую нужно удалить: ")
